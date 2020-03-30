@@ -22,3 +22,11 @@
     font-weight: bold;
     color: steelblue;
   }
+
+  .todo-list-item.important .btn.btn-outline-success.btn-sm.float-right {
+    background-color: #28a745;
+  }
+
+  .todo-list-item.important .fa.fa-diamond{
+    color: #ffffff;
+  }
