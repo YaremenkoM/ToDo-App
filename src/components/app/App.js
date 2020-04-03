@@ -16,7 +16,10 @@ export default class App extends Component {
         this.createTodoItem("Stay strong"),
         this.createTodoItem("Stay strong"),
         this.createTodoItem("Stay strong"),
-      ]
+        this.createTodoItem("Drink coffee"),
+      ],
+      term: '',
+      filter: 'all' // all / done / active
     }
 
     createTodoItem(label) {
@@ -76,8 +79,40 @@ export default class App extends Component {
       })
     }
 
+    filter(items, filter) {
+      switch (filter) {
+        case 'all':
+          return items;
+        case 'active':
+          return items.filter(el => !el.done)
+        case 'done':
+          return items.filter(el => el.done)
+        default: 
+        return items;
+      }
+    }
+
+    onFilterChange = (filter) => {
+      this.setState({filter})
+    }
+
+    search(items, term) {
+      if (term.length === 0) {
+        return items;
+      }
+
+      return items.filter(item => {
+        return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1
+      })
+    }
+
+    onSearchChange = (term) => {
+      this.setState({term})
+    }
+
   render() {
-   const {todoData} = this.state;
+   const {todoData, term, filter} = this.state;
+   const visibleElements = this.filter( this.search(todoData, term),  filter);
 
    const doneCount = todoData.filter( el => el.done).length;
    const moreTodo = todoData.length - doneCount;
@@ -86,11 +121,14 @@ export default class App extends Component {
       <div className="todo-app">
         <AppHeader toDo={moreTodo} done={doneCount}/>
         <div className="top-panel d-flex">
-          <SearchPanel />
-          <ItemStatusFilter />
+          <SearchPanel onSearchChange={this.onSearchChange}/>
+          <ItemStatusFilter 
+            filter={filter}
+            onFilterChange={this.onFilterChange}
+          />
         </div>
         <TodoList 
-          todos={todoData}
+          todos={visibleElements}
           onDeleted={this.deleteItem}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone}

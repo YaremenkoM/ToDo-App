@@ -16,11 +16,14 @@ export default class ItemAddForm extends Component {
     onSubmit = (e) => {
       e.preventDefault()
       this.props.addItem(this.state.label)
+      this.setState({
+        label: ''
+      })
     }
 
     render() {
 
-      const {addItem, label} = this.props;
+      const {label} = this.state;
 
       return(
         <form className="bottom-panel d-flex"
@@ -30,6 +33,7 @@ export default class ItemAddForm extends Component {
                className="form-control new-todo-label"
                placeholder="What needs to be done?" 
                onChange={this.onLabelChange}
+               value={label}
                />
 
         <button type="submit"
